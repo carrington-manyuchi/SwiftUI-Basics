@@ -12,13 +12,20 @@ struct ContentView: View {
     let colorList1: [Color] = [.red, .purple, .green, .pink,]
     let colorList2: [Color] = [.black, .white, .blue]
     @State private var screenTapped: Bool = false
-    @State private var offsetY: CGFloat = -100.0
+    let rotationAngle: CGFloat = 360.0
     
-    // Computed property
+    // TODO: Computed Properties:
     var colors: [Color] {
         screenTapped ? colorList1 : colorList2
     }
     
+    var text: String {
+        screenTapped ? "SwiftUI Basics" : "To know what you know and what you do not know, that is true knowledge"
+    }
+    
+    var font: Font {
+        screenTapped ? .largeTitle : .title
+    }
     
     var body: some View {
         ZStack {
@@ -29,22 +36,28 @@ struct ContentView: View {
             .ignoresSafeArea()
             
             VStack {
-                Text("SwiftUI Basics")
-                    .font(.largeTitle)
+                Text(text)
+                    .font(font)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.black)
-                    .offset(y: offsetY)
+                    .foregroundStyle(.red)
+                    .multilineTextAlignment(.center)
+                
+                Text("Another line of text")
+                    .font(font)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(screenTapped ? .blue : .indigo)
+                    .multilineTextAlignment(.center)
+                    .padding()
             }
-            .padding()
+            .padding(.horizontal)
+            .rotation3DEffect(.degrees(screenTapped ? 0 : rotationAngle), axis: (x: 0, y: 1, z: 0))
             
         }
         .onTapGesture {
             // TODO: Change screen color if tapped
-            self.screenTapped.toggle()
-            withAnimation(.easeIn(duration: 0.6)) {
-                offsetY = screenTapped ? 300 : -300.0
+            withAnimation(.easeIn(duration: 0.5)) {
+                screenTapped.toggle()
             }
-            
         }
     }
 }
